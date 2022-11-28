@@ -1,0 +1,35 @@
+/* prettier-ignore */
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'), url(./assets/Inter-VariableFont_slnt,wght.ttf) format('truetype');
+  font-weight: 100 900;
+}
+
+#root {
+  height: 100vh;
+}
+
+* {
+  font-family: 'Inter', sans-serif !important;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+h2 {
+  font-size: 32px;
+  line-height: 40px;
+  color: black;
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
