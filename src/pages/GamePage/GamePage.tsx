@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { flexCenter, page } from './GamePage.css';
 import { Grid } from './components/Grid/Grid';
 
+const sb = new SolutionBuilder();
+
 export function GamePage() {
-  const [sb] = useState(new SolutionBuilder());
   const [solution, setSolution] = useState(sb.getGridSolution());
 
   function getNewSolution() {
