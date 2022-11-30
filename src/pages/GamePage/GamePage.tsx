@@ -1,6 +1,8 @@
 import { SolutionBuilder } from 'SolutionBuilder';
+import cx from 'classnames';
 import { useState } from 'react';
 
+import { flexCenter, page } from './GamePage.css';
 import { Grid } from './components/Grid/Grid';
 
 export function GamePage() {
@@ -12,11 +14,18 @@ export function GamePage() {
   }
 
   return (
-    <>
-      <Grid initBoard={solution} />
-      <button type="button" onClick={getNewSolution}>
-        New
-      </button>
-    </>
+    <div className={cx(page, flexCenter.row)}>
+      <div
+        className={flexCenter.column}
+        style={{
+          flexDirection: 'column',
+        }}
+      >
+        <Grid initBoard={solution} />
+        <button type="button" onClick={getNewSolution}>
+          New
+        </button>
+      </div>
+    </div>
   );
 }

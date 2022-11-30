@@ -313,5 +313,3 @@ function binarySearch(
   }
   return -1;
 }
-
-console.log(new SolutionBuilder().getGridSolution());
