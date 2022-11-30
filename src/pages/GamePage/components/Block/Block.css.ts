@@ -4,7 +4,7 @@ import {
   BLOCK_BG_SELECTED,
   BLOCK_FG,
   BLOCK_FG_SELECTED,
-  BORDER_WIDTH,
+  SPACING,
 } from 'theme.css';
 
 const baseBlock = style({
@@ -14,13 +14,13 @@ const baseBlock = style({
   width: '100px',
   fontSize: '50px',
   fontWeight: 'bold',
-  margin: BORDER_WIDTH,
+  margin: SPACING,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   userSelect: 'none',
   borderRadius: '8px',
-  border: `2px solid ${BLOCK_FG}`,
+  border: `3px solid ${BLOCK_FG}`,
 });
 
 export const block = styleVariants({

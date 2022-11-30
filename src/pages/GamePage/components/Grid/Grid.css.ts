@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { BORDER_COLOR, BORDER_WIDTH } from 'theme.css';
+import { BORDER_COLOR, SPACING } from 'theme.css';
 
 export const grid = style({
   background: BORDER_COLOR,
@@ -7,7 +7,7 @@ export const grid = style({
 });
 
 export const gridWrapper = style({
-  padding: BORDER_WIDTH,
+  padding: SPACING,
 });
 
 export const row = style({
