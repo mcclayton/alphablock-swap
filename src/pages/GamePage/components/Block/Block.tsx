@@ -1,3 +1,5 @@
+import cx from 'classnames';
+
 import { block } from './Block.css';
 
 type Props = {
@@ -13,8 +15,7 @@ export function Block({ val, x, y, selected, onClick }: Props) {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
-      className={block}
-      style={selected ? { background: 'yellow' } : {}}
+      className={cx(block.default, { [block.selected]: selected })}
       onClick={() => onClick?.(value, x, y)}
     >
       {value}
