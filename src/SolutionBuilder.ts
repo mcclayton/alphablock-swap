@@ -7,7 +7,11 @@ import { SOLUTION_LIST } from './solutionList.ts';
 
 const GROUPED_WORD_LIST = getGroupedWordList(SOLUTION_LIST);
 
-type Nullable<T> = T | null;
+const INDEX_MAP = [
+  // Exclude index 23 (which corresponds to the letter 'X')
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  22, 24, 25,
+];
 
 const EMPTY_GRID: (string | null)[][] = [
   [null, null, null, null],
@@ -60,10 +64,10 @@ export class SolutionBuilder {
 
         this.word = SOLUTION_LIST[randomInt(SOLUTION_LIST.length - 1)];
 
-        const randomIndex = randomInt(GROUPED_WORD_LIST.length - 1);
+        const randomLetterIndex = INDEX_MAP[randomInt(INDEX_MAP.length - 1)];
 
-        this.index = randomInt(GROUPED_WORD_LIST[randomIndex].length - 1);
-        this.word = GROUPED_WORD_LIST[randomIndex][this.index];
+        this.index = randomInt(GROUPED_WORD_LIST[randomLetterIndex].length - 1);
+        this.word = GROUPED_WORD_LIST[randomLetterIndex][this.index];
 
         for (let j = 0; j < 4; j++) {
           this.wordGrid[0][j] = this.word.charAt(j);
