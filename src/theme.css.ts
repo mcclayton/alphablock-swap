@@ -1,3 +1,4 @@
+export const PAGE_BG = '#dae5d0';
 export const BORDER_WIDTH = '2px';
 export const BORDER_COLOR = '#DAE5D0';
 export const BLOCK_BG = '#FEFBE7';

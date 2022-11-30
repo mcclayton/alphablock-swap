@@ -19,6 +19,8 @@ const baseBlock = style({
   justifyContent: 'center',
   alignItems: 'center',
   userSelect: 'none',
+  borderRadius: '8px',
+  border: `2px solid ${BLOCK_FG}`,
 });
 
 export const block = styleVariants({

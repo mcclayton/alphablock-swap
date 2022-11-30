@@ -1,8 +1,10 @@
 import { style, styleVariants } from '@vanilla-extract/css';
+import { PAGE_BG } from 'theme.css';
 
 export const page = style({
   width: '100%',
   height: '100%',
+  background: PAGE_BG,
 });
 
 export const baseFlexCenter = style({
