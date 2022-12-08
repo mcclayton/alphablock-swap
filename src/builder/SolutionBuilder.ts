@@ -1,124 +1,20 @@
 /* eslint-disable */
 // @ts-nocheck
 import cloneDeep from 'lodash/cloneDeep';
-import groupBy from 'lodash/groupBy';
 import merge from 'lodash/merge';
 
-import { SOLUTION_LIST } from './solutionList.ts';
+import { SOLUTION_LIST } from '../solutionList.ts';
+import { EMPTY_GRID, MOVABLE_BLOCKS_MAP } from './constants';
+import { Difficulty, WordGrid } from './types';
+import { binarySearch, getGroupedWordList, randomInt } from './utils';
 
 const GROUPED_WORD_LIST = getGroupedWordList(SOLUTION_LIST);
 
-export enum Difficulty {
-  Easy = 1,
-  Medium = 2,
-  Hard = 3,
-}
-
-type Block = {
-  val: Nullable<string>;
-  immovable?: boolean;
-  match: {
-    column?: boolean;
-    row?: boolean;
-  };
-};
-
-const INDEX_MAP = [
+export const INDEX_MAP = [
   // Exclude index 23 (which corresponds to the letter 'X')
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   22, 24, 25,
 ];
-
-type Grid<T> = T[][];
-export type WordGrid = Grid<Block>;
-
-const EMPTY_GRID: WordGrid = [
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-];
-
-const MOVABLE_BLOCKS_MAP: Record<Difficulty, Grid<{ immovable: boolean }>> = {
-  [Difficulty.Easy]: [
-    [
-      { immovable: true },
-      { immovable: false },
-      { immovable: false },
-      { immovable: true },
-    ],
-    [
-      { immovable: false },
-      { immovable: true },
-      { immovable: true },
-      { immovable: false },
-    ],
-    [
-      { immovable: false },
-      { immovable: true },
-      { immovable: true },
-      { immovable: false },
-    ],
-    [
-      { immovable: true },
-      { immovable: false },
-      { immovable: false },
-      { immovable: true },
-    ],
-  ],
-  [Difficulty.Medium]: [
-    [
-      { immovable: true },
-      { immovable: false },
-      { immovable: false },
-      { immovable: true },
-    ],
-    [
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-    ],
-    [
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-    ],
-    [
-      { immovable: true },
-      { immovable: false },
-      { immovable: false },
-      { immovable: true },
-    ],
-  ],
-  [Difficulty.Hard]: [
-    [
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-    ],
-    [
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-    ],
-    [
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-    ],
-    [
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-      { immovable: false },
-    ],
-  ],
-};
 
 const DUPLICATE_WORD_ATTEMPT_LIMIT = 1300;
 
@@ -141,7 +37,6 @@ export class SolutionBuilder {
   }
 
   newSolution(difficulty: Difficulty) {
-    debugger;
     return getNewWordGrid(difficulty);
   }
 
@@ -468,43 +363,4 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
   }
 
   return merge(wordGrid, MOVABLE_BLOCKS_MAP[difficulty]);
-}
-
-/**
- * Gets an array of words grouped by starting letter.
- */
-function getGroupedWordList(wordList: string[]) {
-  // TODO: Clean this up by just having this be the map version
-  // i.e. { 'a': ['apple', ...] }
-  const groupedObj = groupBy(wordList, (val) => val[0]);
-  const sortedKeys = Object.keys(groupedObj).sort();
-  return sortedKeys.reduce((acc, curr) => {
-    return [...acc, groupedObj[curr]];
-  }, [] as Grid<string>);
-}
-
-function randomInt(max: number) {
-  // min and max included
-  const min = 0;
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function binarySearch(
-  key: string,
-  arrayList: string[],
-  minIndex = 0,
-  maxIndex: number,
-): number {
-  let midIndex: number;
-  while (maxIndex >= minIndex) {
-    midIndex = (minIndex & maxIndex) + ((minIndex ^ maxIndex) >> 1);
-
-    if (arrayList[midIndex].startsWith(key)) return midIndex;
-    else if (arrayList[midIndex].localeCompare(key) < 0)
-      minIndex = midIndex + 1;
-    else if (arrayList[midIndex].localeCompare(key) > 0)
-      maxIndex = midIndex - 1;
-    else return midIndex;
-  }
-  return -1;
 }

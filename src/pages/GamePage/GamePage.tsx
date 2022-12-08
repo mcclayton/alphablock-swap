@@ -1,4 +1,4 @@
-import { Difficulty, SolutionBuilder } from 'SolutionBuilder';
+import { Difficulty, SolutionBuilder } from 'builder';
 import cx from 'classnames';
 import { useState } from 'react';
 

@@ -21,6 +21,7 @@ const baseBlock = style({
   userSelect: 'none',
   borderRadius: '8px',
   border: `3px solid ${BLOCK_FG}`,
+  borderBottom: `8px solid ${BLOCK_FG}`,
   cursor: 'pointer',
 });
 
@@ -28,15 +29,32 @@ export const block = styleVariants({
   default: [baseBlock],
   selected: [
     baseBlock,
-    { background: BLOCK_BG_SELECTED, color: BLOCK_FG_SELECTED },
+    {
+      background: BLOCK_BG_SELECTED,
+      color: BLOCK_FG_SELECTED,
+    },
   ],
   immovable: [
     baseBlock,
     {
-      background: 'lightgray',
-      color: 'darkgray',
-      border: `3px solid darkgray`,
+      background: 'none',
+      color: '#5c5b5b',
+      border: 'none',
       cursor: 'default',
     },
   ],
+});
+
+export const highlight = styleVariants({
+  base: {
+    height: '8px',
+    background: 'white',
+    borderRadius: '6px',
+    width: '65%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  selected: {
+    opacity: 0.3,
+  },
 });

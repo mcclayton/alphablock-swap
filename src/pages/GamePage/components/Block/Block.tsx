@@ -1,6 +1,6 @@
 import cx from 'classnames';
 
-import { block } from './Block.css';
+import { block, highlight } from './Block.css';
 
 type Props = {
   val: Nullable<string>;
@@ -22,7 +22,23 @@ export function Block({ val, x, y, selected, immovable, onClick }: Props) {
       })}
       onClick={() => !immovable && onClick?.(value, x, y)}
     >
-      {value}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        {!immovable && (
+          <div
+            className={cx(highlight.base, {
+              [highlight.selected]: selected,
+            })}
+          />
+        )}
+        <div>{value}</div>
+      </div>
     </div>
   );
 }

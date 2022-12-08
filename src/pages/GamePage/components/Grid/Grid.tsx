@@ -1,4 +1,4 @@
-import { WordGrid } from 'SolutionBuilder';
+import { WordGrid } from 'builder';
 import { ReactChild, useEffect, useState } from 'react';
 
 import { Block } from '../Block';
