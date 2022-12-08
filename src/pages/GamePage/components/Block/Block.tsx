@@ -7,20 +7,20 @@ type Props = {
   x: number;
   y: number;
   selected?: boolean;
-  movable: boolean;
+  immovable: boolean;
   onClick?: (val: string, x: number, y: number) => void;
 };
 
-export function Block({ val, x, y, selected, movable, onClick }: Props) {
+export function Block({ val, x, y, selected, immovable, onClick }: Props) {
   const value = val ? val.toUpperCase() : '-';
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className={cx(block.default, {
         [block.selected]: selected,
-        [block.immovable]: !movable,
+        [block.immovable]: immovable,
       })}
-      onClick={() => movable && onClick?.(value, x, y)}
+      onClick={() => !immovable && onClick?.(value, x, y)}
     >
       {value}
     </div>

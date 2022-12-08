@@ -1,4 +1,4 @@
-import { Difficulty, MOVABLE_BLOCKS_MAP } from 'SolutionBuilder';
+import { WordGrid } from 'SolutionBuilder';
 import { ReactChild, useEffect, useState } from 'react';
 
 import { Block } from '../Block';
@@ -10,11 +10,10 @@ type Coordinate = {
 };
 
 type Props = {
-  initBoard: Nullable<string>[][];
-  difficulty: Difficulty;
+  initBoard: WordGrid;
 };
 
-export function Grid({ initBoard, difficulty }: Props) {
+export function Grid({ initBoard }: Props) {
   const [board, setBoard] = useState(initBoard);
   // Update to reflect new board
   useEffect(() => {
@@ -26,12 +25,12 @@ export function Grid({ initBoard, difficulty }: Props) {
   function handleSelection(val: string, coord: Coordinate) {
     if (selected) {
       // Already a selection, so swap them
-      const valA = board[selected.x][selected.y];
-      const valB = board[coord.x][coord.y];
+      const valA = board[selected.x][selected.y].val;
+      const valB = board[coord.x][coord.y].val;
 
       // Swap
-      board[selected.x][selected.y] = valB;
-      board[coord.x][coord.y] = valA;
+      board[selected.x][selected.y].val = valB;
+      board[coord.x][coord.y].val = valA;
       setSelected(null);
     } else {
       // No selection, select coord
@@ -44,20 +43,17 @@ export function Grid({ initBoard, difficulty }: Props) {
       <div className={gridWrapper}>
         {board.map((row, rowIdx) => (
           <Row key={rowIdx}>
-            {row.map((letter, colIdx) => {
-              const movableBlocksMap = MOVABLE_BLOCKS_MAP[difficulty];
-              return (
-                <Block
-                  movable={movableBlocksMap[rowIdx][colIdx]}
-                  onClick={(val, x, y) => handleSelection(val, { x, y })}
-                  key={`${rowIdx}-${colIdx}`}
-                  val={letter}
-                  x={rowIdx}
-                  y={colIdx}
-                  selected={rowIdx === selected?.x && colIdx === selected?.y}
-                />
-              );
-            })}
+            {row.map((block, colIdx) => (
+              <Block
+                immovable={Boolean(block.immovable)}
+                onClick={(val, x, y) => handleSelection(val, { x, y })}
+                key={`${rowIdx}-${colIdx}`}
+                val={block.val}
+                x={rowIdx}
+                y={colIdx}
+                selected={rowIdx === selected?.x && colIdx === selected?.y}
+              />
+            ))}
           </Row>
         ))}
       </div>

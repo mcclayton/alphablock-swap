@@ -2,6 +2,7 @@
 // @ts-nocheck
 import cloneDeep from 'lodash/cloneDeep';
 import groupBy from 'lodash/groupBy';
+import merge from 'lodash/merge';
 
 import { SOLUTION_LIST } from './solutionList.ts';
 
@@ -13,39 +14,109 @@ export enum Difficulty {
   Hard = 3,
 }
 
+type Block = {
+  val: Nullable<string>;
+  immovable?: boolean;
+  match: {
+    column?: boolean;
+    row?: boolean;
+  };
+};
+
 const INDEX_MAP = [
   // Exclude index 23 (which corresponds to the letter 'X')
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   22, 24, 25,
 ];
 
-type WordGrid = Nullable<string>[][];
+type Grid<T> = T[][];
+export type WordGrid = Grid<Block>;
 
 const EMPTY_GRID: WordGrid = [
-  [null, null, null, null],
-  [null, null, null, null],
-  [null, null, null, null],
-  [null, null, null, null],
+  [{ val: null }, { val: null }, { val: null }, { val: null }],
+  [{ val: null }, { val: null }, { val: null }, { val: null }],
+  [{ val: null }, { val: null }, { val: null }, { val: null }],
+  [{ val: null }, { val: null }, { val: null }, { val: null }],
 ];
 
-export const MOVABLE_BLOCKS_MAP: Record<Difficulty, boolean[][]> = {
+const MOVABLE_BLOCKS_MAP: Record<Difficulty, Grid<{ immovable: boolean }>> = {
   [Difficulty.Easy]: [
-    [false, true, true, false],
-    [true, false, false, true],
-    [true, false, false, true],
-    [false, true, true, false],
+    [
+      { immovable: true },
+      { immovable: false },
+      { immovable: false },
+      { immovable: true },
+    ],
+    [
+      { immovable: false },
+      { immovable: true },
+      { immovable: true },
+      { immovable: false },
+    ],
+    [
+      { immovable: false },
+      { immovable: true },
+      { immovable: true },
+      { immovable: false },
+    ],
+    [
+      { immovable: true },
+      { immovable: false },
+      { immovable: false },
+      { immovable: true },
+    ],
   ],
   [Difficulty.Medium]: [
-    [false, true, true, false],
-    [true, true, true, true],
-    [true, true, true, true],
-    [false, true, true, false],
+    [
+      { immovable: true },
+      { immovable: false },
+      { immovable: false },
+      { immovable: true },
+    ],
+    [
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+    ],
+    [
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+    ],
+    [
+      { immovable: true },
+      { immovable: false },
+      { immovable: false },
+      { immovable: true },
+    ],
   ],
   [Difficulty.Hard]: [
-    [true, true, true, true],
-    [true, true, true, true],
-    [true, true, true, true],
-    [true, true, true, true],
+    [
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+    ],
+    [
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+    ],
+    [
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+    ],
+    [
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+      { immovable: false },
+    ],
   ],
 };
 
@@ -69,8 +140,9 @@ export class SolutionBuilder {
     this.difficulty = difficulty;
   }
 
-  newSolution() {
-    return getNewWordGrid();
+  newSolution(difficulty: Difficulty) {
+    debugger;
+    return getNewWordGrid(difficulty);
   }
 
   shuffle(solution: WordGrid) {
@@ -118,10 +190,10 @@ function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
           (randomNum1 === 3 && randomNum2 === 3)
         );
 
-        char1 = grid[i][j];
-        char2 = grid[randomNum1][randomNum2];
-        grid[i][j] = char2;
-        grid[randomNum1][randomNum2] = char1;
+        char1 = grid[i][j].val;
+        char2 = grid[randomNum1][randomNum2].val;
+        grid[i][j].val = char2;
+        grid[randomNum1][randomNum2].val = char1;
       } else if (
         mode === Difficulty.Medium &&
         !(
@@ -141,18 +213,18 @@ function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
           (randomNum1 === 3 && randomNum2 === 3)
         );
 
-        char1 = grid[i][j];
-        char2 = grid[randomNum1][randomNum2];
-        grid[i][j] = char2;
-        grid[randomNum1][randomNum2] = char1;
+        char1 = grid[i][j].val;
+        char2 = grid[randomNum1][randomNum2].val;
+        grid[i][j].val = char2;
+        grid[randomNum1][randomNum2].val = char1;
       } else if (mode === Difficulty.Hard) {
         randomNum1 = randomInt(3);
         randomNum2 = randomInt(3);
 
-        char1 = grid[i][j];
-        char2 = grid[randomNum1][randomNum2];
-        grid[i][j] = char2;
-        grid[randomNum1][randomNum2] = char1;
+        char1 = grid[i][j].val;
+        char2 = grid[randomNum1][randomNum2].val;
+        grid[i][j].val = char2;
+        grid[randomNum1][randomNum2].val = char1;
       }
     }
   }
@@ -160,7 +232,7 @@ function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
   return grid;
 }
 
-function getNewWordGrid(): WordGrid {
+function getNewWordGrid(difficulty: Difficulty): WordGrid {
   const wordGrid = cloneDeep(EMPTY_GRID);
   let attempts = 0;
   let stage = 1;
@@ -195,7 +267,7 @@ function getNewWordGrid(): WordGrid {
         word = GROUPED_WORD_LIST[randomLetterIndex][index];
 
         for (let j = 0; j < 4; j++) {
-          wordGrid[0][j] = word.charAt(j);
+          wordGrid[0][j].val = word.charAt(j);
         }
       case 2:
         /**
@@ -204,11 +276,13 @@ function getNewWordGrid(): WordGrid {
 
         // TODO: Verify logic of this line
         index1 = randomInt(
-          GROUPED_WORD_LIST[(wordGrid[0][0]?.charCodeAt(0) || 0) - 97].length -
-            1,
+          GROUPED_WORD_LIST[(wordGrid[0][0]?.val?.charCodeAt(0) || 0) - 97]
+            .length - 1,
         );
         word1 =
-          GROUPED_WORD_LIST[(wordGrid[0][0]?.charCodeAt(0) || 0) - 97][index1];
+          GROUPED_WORD_LIST[(wordGrid[0][0]?.val?.charCodeAt(0) || 0) - 97][
+            index1
+          ];
 
         // Try to reduce chance of duplicate words
         if (word1 === word && attempts < DUPLICATE_WORD_ATTEMPT_LIMIT) {
@@ -218,7 +292,7 @@ function getNewWordGrid(): WordGrid {
         }
 
         for (let i = 0; i < 4; i++) {
-          wordGrid[i][0] = word1.charAt(i);
+          wordGrid[i][0].val = word1.charAt(i);
         }
       case 3:
         /**
@@ -226,8 +300,8 @@ function getNewWordGrid(): WordGrid {
          */
 
         index2 = randomInt(
-          GROUPED_WORD_LIST[(wordGrid[0][1]?.charCodeAt(0) || 0) - 97].length -
-            1,
+          GROUPED_WORD_LIST[(wordGrid[0][1]?.val?.charCodeAt(0) || 0) - 97]
+            .length - 1,
         );
         if (index2 === -1) {
           // Backtrack
@@ -236,10 +310,12 @@ function getNewWordGrid(): WordGrid {
         }
 
         word2 =
-          GROUPED_WORD_LIST[(wordGrid[0][1]?.charCodeAt(0) || 0) - 97][index2];
+          GROUPED_WORD_LIST[(wordGrid[0][1]?.val?.charCodeAt(0) || 0) - 97][
+            index2
+          ];
 
         for (let i = 0; i < 4; i++) {
-          wordGrid[i][1] = word2.charAt(i);
+          wordGrid[i][1].val = word2.charAt(i);
         }
 
       case 4:
@@ -248,7 +324,7 @@ function getNewWordGrid(): WordGrid {
          */
 
         index3 = binarySearch(
-          (wordGrid[1][0] || '') + (wordGrid[1][1] || ''),
+          (wordGrid[1][0].val || '') + (wordGrid[1][1].val || ''),
           SOLUTION_LIST,
           index3 + 1,
           SOLUTION_LIST.length - 1,
@@ -270,7 +346,7 @@ function getNewWordGrid(): WordGrid {
         }
 
         for (let i = 0; i < 4; i++) {
-          wordGrid[1][i] = word3.charAt(i);
+          wordGrid[1][i].val = word3.charAt(i);
         }
 
       case 5:
@@ -279,7 +355,7 @@ function getNewWordGrid(): WordGrid {
          */
 
         index4 = binarySearch(
-          (wordGrid[0][2] || '') + (wordGrid[1][2] || ''),
+          (wordGrid[0][2].val || '') + (wordGrid[1][2].val || ''),
           SOLUTION_LIST,
           index4 + 1,
           SOLUTION_LIST.length - 1,
@@ -293,7 +369,7 @@ function getNewWordGrid(): WordGrid {
 
         word4 = SOLUTION_LIST[index4];
         for (let i = 0; i < 4; i++) {
-          wordGrid[i][2] = word4.charAt(i);
+          wordGrid[i][2].val = word4.charAt(i);
         }
 
       case 6:
@@ -302,9 +378,9 @@ function getNewWordGrid(): WordGrid {
          */
 
         index5 = binarySearch(
-          (wordGrid[2][0] || '') +
-            (wordGrid[2][1] || '') +
-            (wordGrid[2][2] || ''),
+          (wordGrid[2][0].val || '') +
+            (wordGrid[2][1].val || '') +
+            (wordGrid[2][2].val || ''),
           SOLUTION_LIST,
           index5 + 1,
           SOLUTION_LIST.length - 1,
@@ -318,7 +394,7 @@ function getNewWordGrid(): WordGrid {
 
         word5 = SOLUTION_LIST[index5];
         for (let i = 0; i < 4; i++) {
-          wordGrid[2][i] = word5.charAt(i);
+          wordGrid[2][i].val = word5.charAt(i);
         }
 
       case 7:
@@ -327,9 +403,9 @@ function getNewWordGrid(): WordGrid {
          */
 
         index6 = binarySearch(
-          (wordGrid[0][3] || '') +
-            (wordGrid[1][3] || '') +
-            (wordGrid[2][3] || ''),
+          (wordGrid[0][3].val || '') +
+            (wordGrid[1][3].val || '') +
+            (wordGrid[2][3].val || ''),
           SOLUTION_LIST,
           index6 + 1,
           SOLUTION_LIST.length - 1,
@@ -344,7 +420,7 @@ function getNewWordGrid(): WordGrid {
 
         word6 = SOLUTION_LIST[index6];
         for (let i = 0; i < 4; i++) {
-          wordGrid[i][3] = word6.charAt(i);
+          wordGrid[i][3].val = word6.charAt(i);
         }
       case 8:
         /**
@@ -353,10 +429,10 @@ function getNewWordGrid(): WordGrid {
          */
 
         index7 = binarySearch(
-          (wordGrid[3][0] || '') +
-            (wordGrid[3][1] || '') +
-            (wordGrid[3][2] || '') +
-            (wordGrid[3][3] || ''),
+          (wordGrid[3][0].val || '') +
+            (wordGrid[3][1].val || '') +
+            (wordGrid[3][2].val || '') +
+            (wordGrid[3][3].val || ''),
           SOLUTION_LIST,
           0,
           SOLUTION_LIST.length - 1,
@@ -371,7 +447,7 @@ function getNewWordGrid(): WordGrid {
 
         word7 = SOLUTION_LIST[index7];
         for (let i = 0; i < 4; i++) {
-          wordGrid[3][i] = word7.charAt(i);
+          wordGrid[3][i].val = word7.charAt(i);
         }
 
         /*
@@ -383,14 +459,15 @@ function getNewWordGrid(): WordGrid {
          */
 
         // Successfully found solution grid, return grid
-        return wordGrid;
+        stage = 0;
+        break;
       default:
         console.error(`Unexpected stage: ${stage}`);
         break;
     }
   }
 
-  window.alert('Too many attempts! Failed to generate puzzle');
+  return merge(wordGrid, MOVABLE_BLOCKS_MAP[difficulty]);
 }
 
 /**
@@ -403,7 +480,7 @@ function getGroupedWordList(wordList: string[]) {
   const sortedKeys = Object.keys(groupedObj).sort();
   return sortedKeys.reduce((acc, curr) => {
     return [...acc, groupedObj[curr]];
-  }, [] as string[][]);
+  }, [] as Grid<string>);
 }
 
 function randomInt(max: number) {

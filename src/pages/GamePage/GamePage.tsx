@@ -8,10 +8,10 @@ import { Grid } from './components/Grid/Grid';
 const sb = new SolutionBuilder();
 
 export function GamePage() {
-  const [solution, setSolution] = useState(sb.newSolution());
+  const [solution, setSolution] = useState(sb.newSolution(sb.difficulty));
 
   function getNewSolution() {
-    setSolution(sb.shuffle(sb.newSolution()));
+    setSolution(sb.shuffle(sb.newSolution(sb.difficulty)));
   }
 
   return (
@@ -22,7 +22,7 @@ export function GamePage() {
           flexDirection: 'column',
         }}
       >
-        <Grid initBoard={solution} difficulty={sb.difficulty} />
+        <Grid initBoard={solution} />
         <button
           className={cx(button.base)}
           type="button"
