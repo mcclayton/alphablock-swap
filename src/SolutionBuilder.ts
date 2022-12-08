@@ -13,265 +13,263 @@ const INDEX_MAP = [
   22, 24, 25,
 ];
 
-const EMPTY_GRID: (string | null)[][] = [
+type WordGrid = Nullable<string>[][];
+
+const EMPTY_GRID: WordGrid = [
   [null, null, null, null],
   [null, null, null, null],
   [null, null, null, null],
   [null, null, null, null],
 ];
 
+const ATTEMPT_LIMIT = 1300;
+
 // TODO: Remove xyst from the list, but just know that removing this means there are no
 // words begining with 'x' so the alphabetic-based indexing will no longer work.
 
 export class SolutionBuilder {
-  wordGrid: Nullable<string>[][];
   dividedWordList: string[][] = [];
 
-  index = -1;
-  index1 = -1;
-  index2 = -1;
-  index3 = -1;
-  index4 = -1;
-  index5 = -1;
-  index6 = -1;
-  index7 = -1; //Used in setWordGrid
-  word: Nullable<string> = null;
-  word1: Nullable<string> = null;
-  word2: Nullable<string> = null;
-  word3: Nullable<string> = null;
-  word4: Nullable<string> = null;
-  word5: Nullable<string> = null;
-  word6: Nullable<string> = null;
-  word7: Nullable<string> = null; //Used in setWordGrid
-  attempts = 0;
-
   getGridSolution() {
-    this.wordGrid = cloneDeep(EMPTY_GRID);
-    let stage: number = 1;
-    while ((stage = this.setWordGrid(stage)) !== 0);
-
-    return this.wordGrid;
+    return SolutionBuilder.getNewWordGrid();
   }
 
-  setWordGrid(stage: number): number {
-    const ATTEMPT_LIMIT = 1300;
+  static getNewWordGrid(): WordGrid {
+    const wordGrid = cloneDeep(EMPTY_GRID);
+    let attempts = 0;
+    let stage = 1;
 
-    switch (stage) {
-      case 1:
-        /**
-         * Stage One
-         */
+    let index = -1;
+    let index1 = -1;
+    let index2 = -1;
+    let index3 = -1;
+    let index4 = -1;
+    let index5 = -1;
+    let index6 = -1;
+    let index7 = -1;
+    let word: Nullable<string> = null;
+    let word1: Nullable<string> = null;
+    let word2: Nullable<string> = null;
+    let word3: Nullable<string> = null;
+    let word4: Nullable<string> = null;
+    let word5: Nullable<string> = null;
+    let word6: Nullable<string> = null;
+    let word7: Nullable<string> = null;
 
-        this.word = SOLUTION_LIST[randomInt(SOLUTION_LIST.length - 1)];
+    while (stage !== 0 && attempts < ATTEMPT_LIMIT) {
+      debugger;
+      switch (stage) {
+        case 1:
+          /**
+           * Stage One
+           */
 
-        const randomLetterIndex = INDEX_MAP[randomInt(INDEX_MAP.length - 1)];
+          const randomLetterIndex = INDEX_MAP[randomInt(INDEX_MAP.length - 1)];
 
-        this.index = randomInt(GROUPED_WORD_LIST[randomLetterIndex].length - 1);
-        this.word = GROUPED_WORD_LIST[randomLetterIndex][this.index];
+          index = randomInt(GROUPED_WORD_LIST[randomLetterIndex].length - 1);
+          word = GROUPED_WORD_LIST[randomLetterIndex][index];
 
-        for (let j = 0; j < 4; j++) {
-          this.wordGrid[0][j] = this.word.charAt(j);
-        }
+          for (let j = 0; j < 4; j++) {
+            wordGrid[0][j] = word.charAt(j);
+          }
+        case 2:
+          /**
+           * Stage Two
+           */
 
-      case 2:
-        /**
-         * Stage Two
-         */
+          // TODO: Verify logic of this line
+          index1 = randomInt(
+            GROUPED_WORD_LIST[(wordGrid[0][0]?.charCodeAt(0) || 0) - 97]
+              .length - 1,
+          );
+          word1 =
+            GROUPED_WORD_LIST[(wordGrid[0][0]?.charCodeAt(0) || 0) - 97][
+              index1
+            ];
 
-        // TODO: Verify logic of this line
-        this.index1 = randomInt(
-          GROUPED_WORD_LIST[(this.wordGrid[0][0]?.charCodeAt(0) || 0) - 97]
-            .length - 1,
-        );
-        this.word1 =
-          GROUPED_WORD_LIST[(this.wordGrid[0][0]?.charCodeAt(0) || 0) - 97][
-            this.index1
-          ];
+          // Try to reduce chance of duplicate words
+          if (word1 === word && attempts < ATTEMPT_LIMIT) {
+            attempts++;
+            stage = 1;
+            break;
+          }
 
-        // Try to reduce chance of duplicate words
-        if (this.word1 === this.word && this.attempts < ATTEMPT_LIMIT) {
-          this.attempts++;
-          return 1;
-        }
+          for (let i = 0; i < 4; i++) {
+            wordGrid[i][0] = word1.charAt(i);
+          }
+        case 3:
+          /**
+           * Stage Three
+           */
 
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[i][0] = this.word1.charAt(i);
-        }
+          index2 = randomInt(
+            GROUPED_WORD_LIST[(wordGrid[0][1]?.charCodeAt(0) || 0) - 97]
+              .length - 1,
+          );
+          if (index2 == -1) {
+            // Backtrack
+            stage = 1;
+            break;
+          }
 
-      case 3:
-        /**
-         * Stage Three
-         */
+          word2 =
+            GROUPED_WORD_LIST[(wordGrid[0][1]?.charCodeAt(0) || 0) - 97][
+              index2
+            ];
 
-        this.index2 = randomInt(
-          GROUPED_WORD_LIST[(this.wordGrid[0][1]?.charCodeAt(0) || 0) - 97]
-            .length - 1,
-        );
-        if (this.index2 == -1) {
-          // Backtrack
-          return 1;
-        }
+          for (let i = 0; i < 4; i++) {
+            wordGrid[i][1] = word2.charAt(i);
+          }
 
-        this.word2 =
-          GROUPED_WORD_LIST[(this.wordGrid[0][1]?.charCodeAt(0) || 0) - 97][
-            this.index2
-          ];
+        case 4:
+          /**
+           * Stage Four
+           */
 
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[i][1] = this.word2.charAt(i);
-        }
+          index3 = binarySearch(
+            (wordGrid[1][0] || '') + (wordGrid[1][1] || ''),
+            SOLUTION_LIST,
+            index3 + 1,
+            SOLUTION_LIST.length - 1,
+          );
 
-      case 4:
-        /**
-         * Stage Four
-         */
+          if (index3 == -1) {
+            // Backtrack
+            stage = 1;
+            break;
+          }
 
-        this.index3 = binarySearch(
-          (this.wordGrid[1][0] || '') + (this.wordGrid[1][1] || ''),
-          SOLUTION_LIST,
-          this.index3 + 1,
-          SOLUTION_LIST.length - 1,
-        );
+          word3 = SOLUTION_LIST[index3];
 
-        if (this.index3 == -1) {
-          // Backtrack
-          return 1;
-        }
+          // Try to reduce chance of duplicate words
+          if (word3 === word2 && attempts < ATTEMPT_LIMIT) {
+            attempts++;
+            stage = 3;
+            break;
+          }
 
-        this.word3 = SOLUTION_LIST[this.index3];
+          for (let i = 0; i < 4; i++) {
+            wordGrid[1][i] = word3.charAt(i);
+          }
 
-        // Try to reduce chance of duplicate words
-        if (this.word3 === this.word2 && this.attempts < ATTEMPT_LIMIT) {
-          this.attempts++;
-          return 3;
-        }
+        case 5:
+          /**
+           * Stage Five
+           */
 
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[1][i] = this.word3.charAt(i);
-        }
+          index4 = binarySearch(
+            (wordGrid[0][2] || '') + (wordGrid[1][2] || ''),
+            SOLUTION_LIST,
+            index4 + 1,
+            SOLUTION_LIST.length - 1,
+          );
 
-      case 5:
-        /**
-         * Stage Five
-         */
+          if (index4 == -1) {
+            // Backtrack
+            stage = 4;
+            break;
+          }
 
-        this.index4 = binarySearch(
-          (this.wordGrid[0][2] || '') + (this.wordGrid[1][2] || ''),
-          SOLUTION_LIST,
-          this.index4 + 1,
-          SOLUTION_LIST.length - 1,
-        );
+          word4 = SOLUTION_LIST[index4];
+          for (let i = 0; i < 4; i++) {
+            wordGrid[i][2] = word4.charAt(i);
+          }
 
-        if (this.index4 == -1) {
-          // Backtrack
-          return 4;
-        }
+        case 6:
+          /**
+           * Stage Six
+           */
 
-        this.word4 = SOLUTION_LIST[this.index4];
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[i][2] = this.word4.charAt(i);
-        }
+          index5 = binarySearch(
+            (wordGrid[2][0] || '') +
+              (wordGrid[2][1] || '') +
+              (wordGrid[2][2] || ''),
+            SOLUTION_LIST,
+            index5 + 1,
+            SOLUTION_LIST.length - 1,
+          );
 
-      case 6:
-        /**
-         * Stage Six
-         */
+          if (index5 == -1) {
+            // Backtrack
+            stage = 5;
+            break;
+          }
 
-        this.index5 = binarySearch(
-          (this.wordGrid[2][0] || '') +
-            (this.wordGrid[2][1] || '') +
-            (this.wordGrid[2][2] || ''),
-          SOLUTION_LIST,
-          this.index5 + 1,
-          SOLUTION_LIST.length - 1,
-        );
+          word5 = SOLUTION_LIST[index5];
+          for (let i = 0; i < 4; i++) {
+            wordGrid[2][i] = word5.charAt(i);
+          }
 
-        if (this.index5 == -1) {
-          // Backtrack
-          return 5;
-        }
+        case 7:
+          /**
+           * Stage Seven
+           */
 
-        this.word5 = SOLUTION_LIST[this.index5];
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[2][i] = this.word5.charAt(i);
-        }
+          index6 = binarySearch(
+            (wordGrid[0][3] || '') +
+              (wordGrid[1][3] || '') +
+              (wordGrid[2][3] || ''),
+            SOLUTION_LIST,
+            index6 + 1,
+            SOLUTION_LIST.length - 1,
+          );
 
-      case 7:
-        /**
-         * Stage Seven
-         */
+          if (index6 == -1) {
+            // Backtrack
 
-        this.index6 = binarySearch(
-          (this.wordGrid[0][3] || '') +
-            (this.wordGrid[1][3] || '') +
-            (this.wordGrid[2][3] || ''),
-          SOLUTION_LIST,
-          this.index6 + 1,
-          SOLUTION_LIST.length - 1,
-        );
+            stage = 6;
+            break;
+          }
 
-        if (this.index6 == -1) {
-          // Backtrack
-          return 6;
-        }
+          word6 = SOLUTION_LIST[index6];
+          for (let i = 0; i < 4; i++) {
+            wordGrid[i][3] = word6.charAt(i);
+          }
+        case 8:
+          /**
+           * Stage Eight
+           * Check if bottom row is actual word
+           */
 
-        this.word6 = SOLUTION_LIST[this.index6];
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[i][3] = this.word6.charAt(i);
-        }
+          index7 = binarySearch(
+            (wordGrid[3][0] || '') +
+              (wordGrid[3][1] || '') +
+              (wordGrid[3][2] || '') +
+              (wordGrid[3][3] || ''),
+            SOLUTION_LIST,
+            0,
+            SOLUTION_LIST.length - 1,
+          );
 
-      case 8:
-        /**
-         * Stage Eight
-         * Check if bottom row is actual word
-         */
+          if (index7 == -1) {
+            // Backtrack
 
-        this.index7 = binarySearch(
-          (this.wordGrid[3][0] || '') +
-            (this.wordGrid[3][1] || '') +
-            (this.wordGrid[3][2] || '') +
-            (this.wordGrid[3][3] || ''),
-          SOLUTION_LIST,
-          0,
-          SOLUTION_LIST.length - 1,
-        );
+            stage = 7;
+            break;
+          }
 
-        if (this.index7 == -1) {
-          // Backtrack
-          return 7;
-        }
+          word7 = SOLUTION_LIST[index7];
+          for (let i = 0; i < 4; i++) {
+            wordGrid[3][i] = word7.charAt(i);
+          }
 
-        this.word7 = SOLUTION_LIST[this.index7];
-        for (let i = 0; i < 4; i++) {
-          this.wordGrid[3][i] = this.word7.charAt(i);
-        }
+          /*
+           * Test to see number of attempts used
+           * for(int i=0; i<Integer.toString(attempts).length(); i++)
+           * {
+           * wordGrid[3][i] = Integer.toString(attempts).charAt(i);
+           * }
+           */
 
-        /*
-         * //Test to see number of attempts used
-         * for(int i=0; i<Integer.toString(attempts).length(); i++)
-         * {
-         * wordGrid[3][i] = Integer.toString(attempts).charAt(i);
-         * }
-         */
-
-        break;
-
-      default:
-        console.error(`Unexpected stage: ${stage}`);
-        break;
+          // Successfully found solution grid, return grid
+          stage = 0;
+          break;
+        default:
+          console.error(`Unexpected stage: ${stage}`);
+          break;
+      }
     }
-
-    // Successfully found solution grid, reset values and return 0.
-    this.word = null;
-    this.word1 = null;
-    this.word2 = null;
-    this.word3 = null;
-    this.word4 = null;
-    this.word5 = null;
-    this.word6 = null;
-    this.word7 = null;
-    this.attempts = 0;
-    return 0;
+    return wordGrid;
   }
 }
 
