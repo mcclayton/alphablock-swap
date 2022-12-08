@@ -33,7 +33,7 @@ export class SolutionBuilder {
   }
 }
 
-function getGridSolution(): WordGrid {
+function getNewWordGrid(): WordGrid {
   const wordGrid = cloneDeep(EMPTY_GRID);
   let attempts = 0;
   let stage = 1;
@@ -56,7 +56,6 @@ function getGridSolution(): WordGrid {
   let word7: Nullable<string> = null;
 
   while (stage !== 0) {
-    debugger;
     switch (stage) {
       case 1:
         /**
