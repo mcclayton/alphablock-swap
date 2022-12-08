@@ -56,7 +56,7 @@ export class SolutionBuilder {
     let word6: Nullable<string> = null;
     let word7: Nullable<string> = null;
 
-    while (stage !== 0 && attempts < ATTEMPT_LIMIT) {
+    while (stage !== 0) {
       debugger;
       switch (stage) {
         case 1:
@@ -262,14 +262,14 @@ export class SolutionBuilder {
            */
 
           // Successfully found solution grid, return grid
-          stage = 0;
-          break;
+          return wordGrid;
         default:
           console.error(`Unexpected stage: ${stage}`);
           break;
       }
     }
-    return wordGrid;
+
+    window.alert('Too many attempts! Failed to generate puzzle');
   }
 }
 
