@@ -7,6 +7,12 @@ import { SOLUTION_LIST } from './solutionList.ts';
 
 const GROUPED_WORD_LIST = getGroupedWordList(SOLUTION_LIST);
 
+enum Difficulty {
+  Easy = 1,
+  Medium = 2,
+  Hard = 3,
+}
+
 const INDEX_MAP = [
   // Exclude index 23 (which corresponds to the letter 'X')
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -28,9 +34,95 @@ const DUPLICATE_WORD_ATTEMPT_LIMIT = 1300;
 // words begining with 'x' so the alphabetic-based indexing will no longer work.
 
 export class SolutionBuilder {
-  getGridSolution() {
+  newSolution() {
     return getNewWordGrid();
   }
+
+  shuffle(solution: WordGrid) {
+    return shuffleGrid(solution, Difficulty.Easy);
+  }
+}
+
+function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
+  const grid = cloneDeep(gridToShuffle);
+  let randomNum1: number;
+  let randomNum2: number;
+  let char1: string;
+  let char2: string;
+
+  //1 is Easy mode
+  //2 is Hard mode
+  //3 is Expert mode
+
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      if (
+        mode === Difficulty.Easy &&
+        !(
+          (i === 0 && j === 0) ||
+          (i === 0 && j === 3) ||
+          (i === 1 && j === 1) ||
+          (i === 1 && j === 2) ||
+          (i === 2 && j === 1) ||
+          (i === 2 && j === 2) ||
+          (i === 3 && j === 0) ||
+          (i === 3 && j === 3)
+        )
+      ) {
+        do {
+          randomNum1 = randomInt(3);
+          randomNum2 = randomInt(3);
+        } while (
+          (randomNum1 === 0 && randomNum2 === 0) ||
+          (randomNum1 === 0 && randomNum2 === 3) ||
+          (randomNum1 === 1 && randomNum2 === 1) ||
+          (randomNum1 === 1 && randomNum2 === 2) ||
+          (randomNum1 === 2 && randomNum2 === 1) ||
+          (randomNum1 === 2 && randomNum2 === 2) ||
+          (randomNum1 === 3 && randomNum2 === 0) ||
+          (randomNum1 === 3 && randomNum2 === 3)
+        );
+
+        char1 = grid[i][j];
+        char2 = grid[randomNum1][randomNum2];
+        grid[i][j] = char2;
+        grid[randomNum1][randomNum2] = char1;
+      } else if (
+        mode === Difficulty.Medium &&
+        !(
+          (i === 0 && j === 0) ||
+          (i === 0 && j === 3) ||
+          (i === 3 && j === 0) ||
+          (i === 3 && j === 3)
+        )
+      ) {
+        do {
+          randomNum1 = randomInt(3);
+          randomNum2 = randomInt(3);
+        } while (
+          (randomNum1 === 0 && randomNum2 === 0) ||
+          (randomNum1 === 0 && randomNum2 === 3) ||
+          (randomNum1 === 3 && randomNum2 === 0) ||
+          (randomNum1 === 3 && randomNum2 === 3)
+        );
+
+        char1 = grid[i][j];
+        char2 = grid[randomNum1][randomNum2];
+        grid[i][j] = char2;
+        grid[randomNum1][randomNum2] = char1;
+      } else if (mode === Difficulty.Hard) {
+        randomNum1 = randomInt(3);
+        randomNum2 = randomInt(3);
+
+        char1 = grid[i][j];
+        char2 = grid[randomNum1][randomNum2];
+        grid[i][j] = char2;
+        grid[randomNum1][randomNum2] = char1;
+      }
+    }
+  }
+
+  return grid;
 }
 
 function getNewWordGrid(): WordGrid {
@@ -102,7 +194,7 @@ function getNewWordGrid(): WordGrid {
           GROUPED_WORD_LIST[(wordGrid[0][1]?.charCodeAt(0) || 0) - 97].length -
             1,
         );
-        if (index2 == -1) {
+        if (index2 === -1) {
           // Backtrack
           stage = 1;
           break;
@@ -127,7 +219,7 @@ function getNewWordGrid(): WordGrid {
           SOLUTION_LIST.length - 1,
         );
 
-        if (index3 == -1) {
+        if (index3 === -1) {
           // Backtrack
           stage = 1;
           break;
@@ -158,7 +250,7 @@ function getNewWordGrid(): WordGrid {
           SOLUTION_LIST.length - 1,
         );
 
-        if (index4 == -1) {
+        if (index4 === -1) {
           // Backtrack
           stage = 4;
           break;
@@ -183,7 +275,7 @@ function getNewWordGrid(): WordGrid {
           SOLUTION_LIST.length - 1,
         );
 
-        if (index5 == -1) {
+        if (index5 === -1) {
           // Backtrack
           stage = 5;
           break;
@@ -208,7 +300,7 @@ function getNewWordGrid(): WordGrid {
           SOLUTION_LIST.length - 1,
         );
 
-        if (index6 == -1) {
+        if (index6 === -1) {
           // Backtrack
 
           stage = 6;
@@ -235,7 +327,7 @@ function getNewWordGrid(): WordGrid {
           SOLUTION_LIST.length - 1,
         );
 
-        if (index7 == -1) {
+        if (index7 === -1) {
           // Backtrack
 
           stage = 7;
