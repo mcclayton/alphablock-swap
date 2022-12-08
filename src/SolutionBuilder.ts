@@ -7,7 +7,7 @@ import { SOLUTION_LIST } from './solutionList.ts';
 
 const GROUPED_WORD_LIST = getGroupedWordList(SOLUTION_LIST);
 
-enum Difficulty {
+export enum Difficulty {
   Easy = 1,
   Medium = 2,
   Hard = 3,
@@ -28,18 +28,53 @@ const EMPTY_GRID: WordGrid = [
   [null, null, null, null],
 ];
 
+export const MOVABLE_BLOCKS_MAP: Record<Difficulty, boolean[][]> = {
+  [Difficulty.Easy]: [
+    [false, true, true, false],
+    [true, false, false, true],
+    [true, false, false, true],
+    [false, true, true, false],
+  ],
+  [Difficulty.Medium]: [
+    [false, true, true, false],
+    [true, true, true, true],
+    [true, true, true, true],
+    [false, true, true, false],
+  ],
+  [Difficulty.Hard]: [
+    [true, true, true, true],
+    [true, true, true, true],
+    [true, true, true, true],
+    [true, true, true, true],
+  ],
+};
+
 const DUPLICATE_WORD_ATTEMPT_LIMIT = 1300;
 
 // TODO: Remove xyst from the list, but just know that removing this means there are no
 // words begining with 'x' so the alphabetic-based indexing will no longer work.
 
 export class SolutionBuilder {
+  difficulty: Difficulty;
+
+  constructor() {
+    this.difficulty = Difficulty.Easy;
+  }
+
+  get difficulty() {
+    return this.difficulty;
+  }
+
+  setDifficulty(difficulty: Difficulty) {
+    this.difficulty = difficulty;
+  }
+
   newSolution() {
     return getNewWordGrid();
   }
 
   shuffle(solution: WordGrid) {
-    return shuffleGrid(solution, Difficulty.Easy);
+    return shuffleGrid(solution, this.difficulty);
   }
 }
 

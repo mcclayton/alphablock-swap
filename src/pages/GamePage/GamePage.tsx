@@ -1,4 +1,4 @@
-import { SolutionBuilder } from 'SolutionBuilder';
+import { Difficulty, SolutionBuilder } from 'SolutionBuilder';
 import cx from 'classnames';
 import { useState } from 'react';
 
@@ -26,13 +26,33 @@ export function GamePage() {
           flexDirection: 'column',
         }}
       >
-        <Grid initBoard={solution} />
+        <Grid initBoard={solution} difficulty={sb.difficulty} />
         <button type="button" onClick={getNewSolution}>
           New
         </button>
         <button type="button" onClick={shuffle}>
           Shuffle
         </button>
+        <div style={{ display: 'flex' }}>
+          <button
+            type="button"
+            onClick={() => sb.setDifficulty(Difficulty.Easy)}
+          >
+            Easy
+          </button>
+          <button
+            type="button"
+            onClick={() => sb.setDifficulty(Difficulty.Medium)}
+          >
+            Medium
+          </button>
+          <button
+            type="button"
+            onClick={() => sb.setDifficulty(Difficulty.Hard)}
+          >
+            Hard
+          </button>
+        </div>
       </div>
     </div>
   );

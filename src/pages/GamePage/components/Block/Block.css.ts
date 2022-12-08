@@ -21,6 +21,7 @@ const baseBlock = style({
   userSelect: 'none',
   borderRadius: '8px',
   border: `3px solid ${BLOCK_FG}`,
+  cursor: 'pointer',
 });
 
 export const block = styleVariants({
@@ -28,5 +29,14 @@ export const block = styleVariants({
   selected: [
     baseBlock,
     { background: BLOCK_BG_SELECTED, color: BLOCK_FG_SELECTED },
+  ],
+  immovable: [
+    baseBlock,
+    {
+      background: 'lightgray',
+      color: 'darkgray',
+      border: `3px solid darkgray`,
+      cursor: 'default',
+    },
   ],
 });

@@ -1,3 +1,4 @@
+import { Difficulty, MOVABLE_BLOCKS_MAP } from 'SolutionBuilder';
 import { ReactChild, useEffect, useState } from 'react';
 
 import { Block } from '../Block';
@@ -10,9 +11,10 @@ type Coordinate = {
 
 type Props = {
   initBoard: Nullable<string>[][];
+  difficulty: Difficulty;
 };
 
-export function Grid({ initBoard }: Props) {
+export function Grid({ initBoard, difficulty }: Props) {
   const [board, setBoard] = useState(initBoard);
   // Update to reflect new board
   useEffect(() => {
@@ -42,16 +44,20 @@ export function Grid({ initBoard }: Props) {
       <div className={gridWrapper}>
         {board.map((row, rowIdx) => (
           <Row key={rowIdx}>
-            {row.map((letter, colIdx) => (
-              <Block
-                onClick={(val, x, y) => handleSelection(val, { x, y })}
-                key={`${rowIdx}-${colIdx}`}
-                val={letter}
-                x={rowIdx}
-                y={colIdx}
-                selected={rowIdx === selected?.x && colIdx === selected?.y}
-              />
-            ))}
+            {row.map((letter, colIdx) => {
+              const movableBlocksMap = MOVABLE_BLOCKS_MAP[difficulty];
+              return (
+                <Block
+                  movable={movableBlocksMap[rowIdx][colIdx]}
+                  onClick={(val, x, y) => handleSelection(val, { x, y })}
+                  key={`${rowIdx}-${colIdx}`}
+                  val={letter}
+                  x={rowIdx}
+                  y={colIdx}
+                  selected={rowIdx === selected?.x && colIdx === selected?.y}
+                />
+              );
+            })}
           </Row>
         ))}
       </div>
