@@ -17,3 +17,8 @@ export const flexCenter = styleVariants({
   row: [baseFlexCenter, { flexDirection: 'row' }],
   column: [baseFlexCenter, { flexDirection: 'column' }],
 });
+
+export const button = styleVariants({
+  base: { padding: '10px' },
+  selected: { border: '1px solid blue' },
+});

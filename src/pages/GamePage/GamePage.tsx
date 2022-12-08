@@ -2,7 +2,7 @@ import { Difficulty, SolutionBuilder } from 'SolutionBuilder';
 import cx from 'classnames';
 import { useState } from 'react';
 
-import { flexCenter, page } from './GamePage.css';
+import { button, flexCenter, page } from './GamePage.css';
 import { Grid } from './components/Grid/Grid';
 
 const sb = new SolutionBuilder();
@@ -11,11 +11,7 @@ export function GamePage() {
   const [solution, setSolution] = useState(sb.newSolution());
 
   function getNewSolution() {
-    setSolution(sb.newSolution());
-  }
-
-  function shuffle() {
-    setSolution(sb.shuffle(solution));
+    setSolution(sb.shuffle(sb.newSolution()));
   }
 
   return (
@@ -27,28 +23,47 @@ export function GamePage() {
         }}
       >
         <Grid initBoard={solution} difficulty={sb.difficulty} />
-        <button type="button" onClick={getNewSolution}>
+        <button
+          className={cx(button.base)}
+          type="button"
+          onClick={getNewSolution}
+        >
           New
-        </button>
-        <button type="button" onClick={shuffle}>
-          Shuffle
         </button>
         <div style={{ display: 'flex' }}>
           <button
+            className={cx(button.base, {
+              [button.selected]: sb.difficulty === Difficulty.Easy,
+            })}
             type="button"
-            onClick={() => sb.setDifficulty(Difficulty.Easy)}
+            onClick={() => {
+              sb.setDifficulty(Difficulty.Easy);
+              getNewSolution();
+            }}
           >
             Easy
           </button>
           <button
+            className={cx(button.base, {
+              [button.selected]: sb.difficulty === Difficulty.Medium,
+            })}
             type="button"
-            onClick={() => sb.setDifficulty(Difficulty.Medium)}
+            onClick={() => {
+              sb.setDifficulty(Difficulty.Medium);
+              getNewSolution();
+            }}
           >
             Medium
           </button>
           <button
+            className={cx(button.base, {
+              [button.selected]: sb.difficulty === Difficulty.Hard,
+            })}
             type="button"
-            onClick={() => sb.setDifficulty(Difficulty.Hard)}
+            onClick={() => {
+              sb.setDifficulty(Difficulty.Hard);
+              getNewSolution();
+            }}
           >
             Hard
           </button>
