@@ -2,7 +2,6 @@
 // @ts-nocheck
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
-import { stringify } from 'querystring';
 
 import { SOLUTION_LIST } from '../solutionList.ts';
 import { EMPTY_GRID, MOVABLE_BLOCKS_MAP } from './constants';
@@ -46,19 +45,15 @@ export class SolutionBuilder {
   }
 }
 
-function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
-  const grid = cloneDeep(gridToShuffle);
+function shuffleGrid(grid: WordGrid, mode: Difficulty) {
+  const shuffled = cloneDeep(grid);
   let randomNum1: number;
   let randomNum2: number;
   let char1: string;
   let char2: string;
 
-  //1 is Easy mode
-  //2 is Hard mode
-  //3 is Expert mode
-
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
+  for (let i = 0; i < shuffled.length; i++) {
+    for (let j = 0; j < shuffled[i].length; j++) {
       if (
         mode === Difficulty.Easy &&
         !(
@@ -86,10 +81,10 @@ function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
           (randomNum1 === 3 && randomNum2 === 3)
         );
 
-        char1 = grid[i][j].val;
-        char2 = grid[randomNum1][randomNum2].val;
-        grid[i][j].val = char2;
-        grid[randomNum1][randomNum2].val = char1;
+        char1 = shuffled[i][j].val;
+        char2 = shuffled[randomNum1][randomNum2].val;
+        shuffled[i][j].val = char2;
+        shuffled[randomNum1][randomNum2].val = char1;
       } else if (
         mode === Difficulty.Medium &&
         !(
@@ -109,23 +104,23 @@ function shuffleGrid(gridToShuffle: WordGrid, mode: Difficulty) {
           (randomNum1 === 3 && randomNum2 === 3)
         );
 
-        char1 = grid[i][j].val;
-        char2 = grid[randomNum1][randomNum2].val;
-        grid[i][j].val = char2;
-        grid[randomNum1][randomNum2].val = char1;
+        char1 = shuffled[i][j].val;
+        char2 = shuffled[randomNum1][randomNum2].val;
+        shuffled[i][j].val = char2;
+        shuffled[randomNum1][randomNum2].val = char1;
       } else if (mode === Difficulty.Hard) {
         randomNum1 = randomInt(3);
         randomNum2 = randomInt(3);
 
-        char1 = grid[i][j].val;
-        char2 = grid[randomNum1][randomNum2].val;
-        grid[i][j].val = char2;
-        grid[randomNum1][randomNum2].val = char1;
+        char1 = shuffled[i][j].val;
+        char2 = shuffled[randomNum1][randomNum2].val;
+        shuffled[i][j].val = char2;
+        shuffled[randomNum1][randomNum2].val = char1;
       }
     }
   }
 
-  return grid;
+  return shuffled;
 }
 
 function getNewWordGrid(difficulty: Difficulty): WordGrid {
@@ -346,14 +341,6 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
           wordGrid[3][i].val = word7.charAt(i);
         }
 
-        /*
-         * Test to see number of attempts used
-         * for(int i=0; i<Integer.toString(attempts).length(); i++)
-         * {
-         * wordGrid[3][i] = Integer.toString(attempts).charAt(i);
-         * }
-         */
-
         // Successfully found solution grid, return grid
         stage = 0;
         break;
@@ -364,4 +351,92 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
   }
 
   return merge(wordGrid, MOVABLE_BLOCKS_MAP[difficulty]);
+}
+
+export function highlightMatches(grid: WordGrid) {
+  let match = false;
+  const newGrid = cloneDeep(grid);
+
+  // Reset matches
+  newGrid.forEach((rows) => rows.forEach((cell) => (cell.match = false)));
+
+  // TODO: Generate the row/column coordinate lists
+  const rowsAndCols = [
+    [
+      [0, 0],
+      [0, 1],
+      [0, 2],
+      [0, 3],
+    ],
+    [
+      [1, 0],
+      [1, 1],
+      [1, 2],
+      [1, 3],
+    ],
+    [
+      [2, 0],
+      [2, 1],
+      [2, 2],
+      [2, 3],
+    ],
+    [
+      [3, 0],
+      [3, 1],
+      [3, 2],
+      [3, 3],
+    ],
+    [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+    ],
+    [
+      [0, 1],
+      [1, 1],
+      [2, 1],
+      [3, 1],
+    ],
+    [
+      [0, 2],
+      [1, 2],
+      [2, 2],
+      [3, 2],
+    ],
+    [
+      [0, 3],
+      [1, 3],
+      [2, 3],
+      [3, 3],
+    ],
+  ];
+
+  rowsAndCols.forEach((rowOrColCoords) => {
+    const word = rowOrColCoords.reduce(
+      (acc, [x, y]) => `${acc}${grid[x][y].val}`,
+      '',
+    );
+
+    const idx = binarySearch(word, SOLUTION_LIST, 0, SOLUTION_LIST.length - 1);
+
+    const currMatch = idx !== -1;
+
+    rowOrColCoords.forEach(([x, y]) => {
+      newGrid[x][y] = {
+        ...newGrid[x][y],
+        match: newGrid[x][y].match || currMatch,
+      };
+    });
+    match = match || currMatch;
+  });
+
+  return { grid: newGrid, match };
+}
+
+export function didWin(grid: WordGrid) {
+  return grid.reduce(
+    (acc, rows) => acc && rows.reduce((acc, cell) => acc && cell.match, true),
+    true,
+  );
 }

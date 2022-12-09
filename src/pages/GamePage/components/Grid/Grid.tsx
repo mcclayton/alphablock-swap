@@ -1,4 +1,4 @@
-import { WordGrid } from 'builder';
+import { WordGrid, didWin, highlightMatches } from 'builder';
 import { ReactChild, useEffect, useState } from 'react';
 
 import { Block } from '../Block';
@@ -20,6 +20,13 @@ export function Grid({ initBoard }: Props) {
     setBoard(initBoard);
   }, [initBoard]);
 
+  useEffect(() => {
+    if (didWin(board)) {
+      // eslint-disable-next-line no-alert
+      window.alert('Congratulations, you won!');
+    }
+  }, [board]);
+
   const [selected, setSelected] = useState<Nullable<Coordinate>>(null);
   const [selectedTwo, setSelectedTwo] = useState<Nullable<Coordinate>>(null);
 
@@ -38,6 +45,7 @@ export function Grid({ initBoard }: Props) {
       setTimeout(() => {
         setSelected(null);
         setSelectedTwo(null);
+        setBoard(highlightMatches(board).grid);
       }, 100);
     } else {
       // No selection, select coord
@@ -58,6 +66,7 @@ export function Grid({ initBoard }: Props) {
                 val={block.val}
                 x={rowIdx}
                 y={colIdx}
+                highlight={block.match}
                 selected={
                   (rowIdx === selected?.x && colIdx === selected?.y) ||
                   (rowIdx === selectedTwo?.x && colIdx === selectedTwo?.y)

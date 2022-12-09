@@ -43,9 +43,16 @@ export const block = styleVariants({
       cursor: 'default',
     },
   ],
+  highlight: [
+    baseBlock,
+    {
+      color: '#ffbf00',
+      textShadow: '#a67c00 2px 2px 3px',
+    },
+  ],
 });
 
-export const highlight = styleVariants({
+export const shine = styleVariants({
   base: {
     height: '8px',
     background: 'white',

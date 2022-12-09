@@ -7,10 +7,7 @@ export enum Difficulty {
 export type Block = {
   val: Nullable<string>;
   immovable?: boolean;
-  match: {
-    column?: boolean;
-    row?: boolean;
-  };
+  match: boolean;
 };
 
 export type Grid<T> = T[][];

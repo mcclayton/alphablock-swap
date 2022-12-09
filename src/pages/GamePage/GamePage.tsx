@@ -8,7 +8,9 @@ import { Grid } from './components/Grid/Grid';
 const sb = new SolutionBuilder();
 
 export function GamePage() {
-  const [solution, setSolution] = useState(sb.newSolution(sb.difficulty));
+  const [solution, setSolution] = useState(
+    sb.shuffle(sb.newSolution(sb.difficulty)),
+  );
 
   function getNewSolution() {
     setSolution(sb.shuffle(sb.newSolution(sb.difficulty)));
