@@ -27,6 +27,7 @@ export function Block({
     <div
       className={cx(block.default, {
         [block.selected]: selected,
+        [block.moveable]: !immovable,
         [block.immovable]: immovable,
         [block.highlight]: highlight,
       })}

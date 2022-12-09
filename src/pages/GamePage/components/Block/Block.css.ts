@@ -23,6 +23,28 @@ const baseBlock = style({
   border: `3px solid ${BLOCK_FG}`,
   borderBottom: `8px solid ${BLOCK_FG}`,
   cursor: 'pointer',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      fontSize: '30px',
+      height: '70px',
+      width: '70px',
+    },
+    'screen and (min-width: 600px)': {
+      fontSize: '40px',
+      height: '85px',
+      width: '85px',
+    },
+    'screen and (min-width: 768px)': {
+      fontSize: '50px',
+      height: '100px',
+      width: '100px',
+    },
+    'screen and (min-width: 1200px)': {
+      fontSize: '55px',
+      height: '110px',
+      width: '110px',
+    },
+  },
 });
 
 export const block = styleVariants({
@@ -32,6 +54,18 @@ export const block = styleVariants({
     {
       background: BLOCK_BG_SELECTED,
       color: BLOCK_FG_SELECTED,
+      borderBottom: `6px solid ${BLOCK_FG}`,
+    },
+  ],
+  moveable: [
+    baseBlock,
+    {
+      selectors: {
+        '&:hover': {
+          border: `3px solid ${BLOCK_FG}`,
+          borderBottom: `6px solid ${BLOCK_FG}`,
+        },
+      },
     },
   ],
   immovable: [
@@ -60,6 +94,7 @@ export const shine = styleVariants({
     width: '65%',
     display: 'flex',
     justifyContent: 'center',
+    opacity: 0.7,
   },
   selected: {
     opacity: 0.3,

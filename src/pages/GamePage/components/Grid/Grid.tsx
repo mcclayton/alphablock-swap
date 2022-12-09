@@ -15,9 +15,10 @@ type Props = {
 
 export function Grid({ initBoard }: Props) {
   const [board, setBoard] = useState(initBoard);
+  const updateBoard = (b: WordGrid) => setBoard(highlightMatches(b).grid);
   // Update to reflect new board
   useEffect(() => {
-    setBoard(initBoard);
+    updateBoard(initBoard);
   }, [initBoard]);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export function Grid({ initBoard }: Props) {
       setTimeout(() => {
         setSelected(null);
         setSelectedTwo(null);
-        setBoard(highlightMatches(board).grid);
+        updateBoard(board);
       }, 100);
     } else {
       // No selection, select coord

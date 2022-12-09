@@ -3,7 +3,8 @@
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
 
-import { SOLUTION_LIST } from '../solutionList.ts';
+import { CHECK_LIST } from '../checkList';
+import { SOLUTION_LIST } from '../solutionList';
 import { EMPTY_GRID, MOVABLE_BLOCKS_MAP } from './constants';
 import { Difficulty, WordGrid } from './types';
 import { binarySearch, getGroupedWordList, randomInt } from './utils';
@@ -418,7 +419,7 @@ export function highlightMatches(grid: WordGrid) {
       '',
     );
 
-    const idx = binarySearch(word, SOLUTION_LIST, 0, SOLUTION_LIST.length - 1);
+    const idx = binarySearch(word, CHECK_LIST, 0, CHECK_LIST.length - 1);
 
     const currMatch = idx !== -1;
 
