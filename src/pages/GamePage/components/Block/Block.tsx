@@ -2,13 +2,19 @@ import cx from 'classnames';
 
 import { block, letterContainer, shine } from './Block.css';
 
+export enum Highlight {
+  Winner = 'winner',
+  Match = 'match',
+  None = 'none',
+}
+
 type Props = {
   val: Nullable<string>;
   x: number;
   y: number;
   selected?: boolean;
   immovable: boolean;
-  highlight: boolean;
+  highlight: Highlight;
   onClick?: (val: string, x: number, y: number) => void;
 };
 
@@ -29,7 +35,8 @@ export function Block({
         [block.selected]: selected,
         [block.moveable]: !immovable,
         [block.immovable]: immovable,
-        [block.highlight]: highlight,
+        [block.highlight]: highlight === Highlight.Match,
+        [block.winner]: highlight === Highlight.Winner,
       })}
       onClick={() => !immovable && onClick?.(value, x, y)}
     >

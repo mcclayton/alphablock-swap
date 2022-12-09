@@ -1,7 +1,7 @@
 import { WordGrid, didWin, highlightMatches } from 'builder';
 import { ReactChild, useEffect, useState } from 'react';
 
-import { Block } from '../Block';
+import { Block, Highlight } from '../Block';
 import { grid, gridWrapper, row as rowClass } from './Grid.css';
 
 type Coordinate = {
@@ -14,6 +14,7 @@ type Props = {
 };
 
 export function Grid({ initBoard }: Props) {
+  const [winner, setWinner] = useState(false);
   const [board, setBoard] = useState(initBoard);
   const updateBoard = (b: WordGrid) => setBoard(highlightMatches(b).grid);
   // Update to reflect new board
@@ -23,6 +24,7 @@ export function Grid({ initBoard }: Props) {
 
   useEffect(() => {
     if (didWin(board)) {
+      setWinner(true);
       // eslint-disable-next-line no-alert
       window.alert('Congratulations, you won!');
     }
@@ -54,6 +56,16 @@ export function Grid({ initBoard }: Props) {
     }
   }
 
+  function getHighlight(match: boolean) {
+    if (winner) {
+      return Highlight.Winner;
+    }
+    if (match) {
+      return Highlight.Match;
+    }
+    return Highlight.None;
+  }
+
   return (
     <div className={grid}>
       <div className={gridWrapper}>
@@ -67,7 +79,7 @@ export function Grid({ initBoard }: Props) {
                 val={block.val}
                 x={rowIdx}
                 y={colIdx}
-                highlight={block.match}
+                highlight={getHighlight(block.match)}
                 selected={
                   (rowIdx === selected?.x && colIdx === selected?.y) ||
                   (rowIdx === selectedTwo?.x && colIdx === selectedTwo?.y)
