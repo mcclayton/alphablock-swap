@@ -1,6 +1,6 @@
 import cx from 'classnames';
 
-import { block, highlight } from './Block.css';
+import { block, highlight, letterContainer } from './Block.css';
 
 type Props = {
   val: Nullable<string>;
@@ -22,14 +22,7 @@ export function Block({ val, x, y, selected, immovable, onClick }: Props) {
       })}
       onClick={() => !immovable && onClick?.(value, x, y)}
     >
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+      <div className={letterContainer}>
         {!immovable && (
           <div
             className={cx(highlight.base, {

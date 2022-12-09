@@ -21,9 +21,12 @@ export function Grid({ initBoard }: Props) {
   }, [initBoard]);
 
   const [selected, setSelected] = useState<Nullable<Coordinate>>(null);
+  const [selectedTwo, setSelectedTwo] = useState<Nullable<Coordinate>>(null);
 
   function handleSelection(val: string, coord: Coordinate) {
-    if (selected) {
+    if (selected && !selectedTwo) {
+      setSelectedTwo(coord);
+
       // Already a selection, so swap them
       const valA = board[selected.x][selected.y].val;
       const valB = board[coord.x][coord.y].val;
@@ -31,7 +34,11 @@ export function Grid({ initBoard }: Props) {
       // Swap
       board[selected.x][selected.y].val = valB;
       board[coord.x][coord.y].val = valA;
-      setSelected(null);
+
+      setTimeout(() => {
+        setSelected(null);
+        setSelectedTwo(null);
+      }, 100);
     } else {
       // No selection, select coord
       setSelected(coord);
@@ -51,7 +58,10 @@ export function Grid({ initBoard }: Props) {
                 val={block.val}
                 x={rowIdx}
                 y={colIdx}
-                selected={rowIdx === selected?.x && colIdx === selected?.y}
+                selected={
+                  (rowIdx === selected?.x && colIdx === selected?.y) ||
+                  (rowIdx === selectedTwo?.x && colIdx === selectedTwo?.y)
+                }
               />
             ))}
           </Row>

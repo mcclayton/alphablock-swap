@@ -58,3 +58,10 @@ export const highlight = styleVariants({
     opacity: 0.3,
   },
 });
+
+export const letterContainer = style({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+});

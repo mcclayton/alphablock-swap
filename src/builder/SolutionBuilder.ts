@@ -2,6 +2,7 @@
 // @ts-nocheck
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
+import { stringify } from 'querystring';
 
 import { SOLUTION_LIST } from '../solutionList.ts';
 import { EMPTY_GRID, MOVABLE_BLOCKS_MAP } from './constants';
