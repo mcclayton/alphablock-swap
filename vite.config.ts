@@ -15,6 +15,7 @@ const PORT = 3000;
 export default defineConfig((env) => {
   process.env = { ...process.env, ...loadEnv(env.mode, process.cwd()) };
   return {
+    base: '/alphablock-swap/',
     server: {
       port: PORT,
       open: `http://localhost:${PORT}`,

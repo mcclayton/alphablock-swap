@@ -30,6 +30,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
+    "deploy": "vite build && gh-pages -d build",
     "test": "node scripts/test.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint:fix": "npm run lint:check -- --fix",
@@ -87,6 +88,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-storybook": "^0.5.6",
     "eslint-plugin-testing-library": "^5.0.5",
+    "gh-pages": "^4.0.0",
     "husky": "^7.0.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.3.1",
