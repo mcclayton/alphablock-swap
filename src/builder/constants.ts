@@ -1,10 +1,11 @@
-import { Difficulty, Grid } from './types';
+import { Difficulty, Grid, WordGrid } from './types';
+import { block } from './utils';
 
-export const EMPTY_GRID: Grid<{ val: null }> = [
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
-  [{ val: null }, { val: null }, { val: null }, { val: null }],
+export const EMPTY_GRID: WordGrid = [
+  [block(), block(), block(), block()],
+  [block(), block(), block(), block()],
+  [block(), block(), block(), block()],
+  [block(), block(), block(), block()],
 ];
 
 export const MOVABLE_BLOCKS_MAP: Record<

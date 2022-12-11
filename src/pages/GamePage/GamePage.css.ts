@@ -22,3 +22,14 @@ export const button = styleVariants({
   base: { padding: '10px' },
   selected: { border: '1px solid blue' },
 });
+
+export const boardContainer = style({
+  width: 'fit-content',
+});
+
+export const header = style({
+  color: '#c9d4c0',
+  fontSize: '40px',
+  margin: 0,
+  fontWeight: 400,
+});

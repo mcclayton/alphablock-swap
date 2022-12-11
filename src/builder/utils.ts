@@ -1,6 +1,17 @@
 import groupBy from 'lodash/groupBy';
 
-import { Grid } from './types';
+import { Block, Grid } from './types';
+
+export function block(): Block {
+  return {
+    val: null,
+    immovable: false,
+    match: {
+      col: false,
+      row: false,
+    },
+  };
+}
 
 /**
  * Gets an array of words grouped by starting letter.

@@ -362,7 +362,7 @@ export function highlightMatches(grid: WordGrid) {
   newGrid.forEach((rows) => rows.forEach((cell) => (cell.match = false)));
 
   // TODO: Generate the row/column coordinate lists
-  const rowsAndCols = [
+  const rows = [
     [
       [0, 0],
       [0, 1],
@@ -387,6 +387,9 @@ export function highlightMatches(grid: WordGrid) {
       [3, 2],
       [3, 3],
     ],
+  ];
+
+  const columns = [
     [
       [0, 0],
       [1, 0],
@@ -413,8 +416,9 @@ export function highlightMatches(grid: WordGrid) {
     ],
   ];
 
-  rowsAndCols.forEach((rowOrColCoords) => {
-    const word = rowOrColCoords.reduce(
+  // TODO: consolidate row and col logic
+  rows.forEach((rowCoords) => {
+    const word = rowCoords.reduce(
       (acc, [x, y]) => `${acc}${grid[x][y].val}`,
       '',
     );
@@ -423,10 +427,35 @@ export function highlightMatches(grid: WordGrid) {
 
     const currMatch = idx !== -1;
 
-    rowOrColCoords.forEach(([x, y]) => {
+    rowCoords.forEach(([x, y]) => {
       newGrid[x][y] = {
         ...newGrid[x][y],
-        match: newGrid[x][y].match || currMatch,
+        match: {
+          ...newGrid[x][y].match,
+          row: currMatch,
+        },
+      };
+    });
+    match = match || currMatch;
+  });
+
+  columns.forEach((colCoords) => {
+    const word = colCoords.reduce(
+      (acc, [x, y]) => `${acc}${grid[x][y].val}`,
+      '',
+    );
+
+    const idx = binarySearch(word, CHECK_LIST, 0, CHECK_LIST.length - 1);
+
+    const currMatch = idx !== -1;
+
+    colCoords.forEach(([x, y]) => {
+      newGrid[x][y] = {
+        ...newGrid[x][y],
+        match: {
+          ...newGrid[x][y].match,
+          col: currMatch,
+        },
       };
     });
     match = match || currMatch;
@@ -437,7 +466,9 @@ export function highlightMatches(grid: WordGrid) {
 
 export function didWin(grid: WordGrid) {
   return grid.reduce(
-    (acc, rows) => acc && rows.reduce((acc, cell) => acc && cell.match, true),
+    (acc, rows) =>
+      acc &&
+      rows.reduce((acc, cell) => acc && cell.match.row && cell.match.col, true),
     true,
   );
 }

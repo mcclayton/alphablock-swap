@@ -14,7 +14,6 @@ type Props = {
 };
 
 export function Grid({ initBoard }: Props) {
-  const [winner, setWinner] = useState(false);
   const [board, setBoard] = useState(initBoard);
   const updateBoard = (b: WordGrid) => setBoard(highlightMatches(b).grid);
   // Update to reflect new board
@@ -24,7 +23,6 @@ export function Grid({ initBoard }: Props) {
 
   useEffect(() => {
     if (didWin(board)) {
-      setWinner(true);
       // eslint-disable-next-line no-alert
       window.alert('Congratulations, you won!');
     }
@@ -56,12 +54,12 @@ export function Grid({ initBoard }: Props) {
     }
   }
 
-  function getHighlight(match: boolean) {
-    if (winner) {
-      return Highlight.Winner;
+  function getHighlight(match: { row?: boolean; col?: boolean }) {
+    if (match.col && match.row) {
+      return Highlight.Double;
     }
-    if (match) {
-      return Highlight.Match;
+    if (match.row || match.col) {
+      return Highlight.Single;
     }
     return Highlight.None;
   }

@@ -77,20 +77,11 @@ export const block = styleVariants({
       cursor: 'default',
     },
   ],
-  highlight: [
-    baseBlock,
-    {
-      color: '#ffbf00',
-      textShadow: '#a67c00 2px 2px 3px',
-    },
-  ],
-  winner: [
-    baseBlock,
-    {
-      color: '#84ea2c',
-      textShadow: '#858585 2px 2px 3px',
-    },
-  ],
+});
+
+export const blockHighlight = styleVariants({
+  single: { color: '#b4d896', textShadow: '#a67c00 2px 2px 3px' },
+  double: { color: '#84ea2c', textShadow: '#858585 2px 2px 3px' },
 });
 
 export const shine = styleVariants({

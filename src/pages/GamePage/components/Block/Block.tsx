@@ -1,10 +1,10 @@
 import cx from 'classnames';
 
-import { block, letterContainer, shine } from './Block.css';
+import { block, blockHighlight, letterContainer, shine } from './Block.css';
 
 export enum Highlight {
-  Winner = 'winner',
-  Match = 'match',
+  Double = 'double',
+  Single = 'single',
   None = 'none',
 }
 
@@ -35,8 +35,8 @@ export function Block({
         [block.selected]: selected,
         [block.moveable]: !immovable,
         [block.immovable]: immovable,
-        [block.highlight]: highlight === Highlight.Match,
-        [block.winner]: highlight === Highlight.Winner,
+        [blockHighlight.single]: highlight === Highlight.Single,
+        [blockHighlight.double]: highlight === Highlight.Double,
       })}
       onClick={() => !immovable && onClick?.(value, x, y)}
     >
