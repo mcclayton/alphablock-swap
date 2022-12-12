@@ -34,10 +34,10 @@ export const header = style({
   fontFamily: 'Pacifico !important',
   '@media': {
     'screen and (max-width: 600px)': {
-      fontSize: '25px',
+      fontSize: '30px',
     },
     'screen and (min-width: 600px)': {
-      fontSize: '30px',
+      fontSize: '33px',
     },
     'screen and (min-width: 768px)': {
       fontSize: '35px',

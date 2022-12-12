@@ -38,7 +38,21 @@ export class SolutionBuilder {
   }
 
   newSolution(difficulty: Difficulty) {
-    return getNewWordGrid(difficulty);
+    let shuffleAttempts = 0;
+    let solution = getNewWordGrid(difficulty);
+    while (highlightMatches(solution).match) {
+      debugger;
+      console.log('Shuffling...');
+      // Some grids are not shuffle-able, so we need to get a new
+      // grid after too many attempts
+      if (shuffleAttempts > 20) {
+        shuffleAttempts = 0;
+        solution = getNewWordGrid(difficulty);
+      }
+      solution = shuffleGrid(solution, difficulty);
+      shuffleAttempts++;
+    }
+    return solution;
   }
 
   shuffle(solution: WordGrid) {
