@@ -1,5 +1,4 @@
 /* eslint-disable */
-// @ts-nocheck
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
 
@@ -23,26 +22,24 @@ const DUPLICATE_WORD_ATTEMPT_LIMIT = 1300;
 // words begining with 'x' so the alphabetic-based indexing will no longer work.
 
 export class SolutionBuilder {
-  difficulty: Difficulty;
+  _difficulty: Difficulty;
 
   constructor() {
-    this.difficulty = Difficulty.Easy;
+    this._difficulty = Difficulty.Easy;
   }
 
   get difficulty() {
-    return this.difficulty;
+    return this._difficulty;
   }
 
   setDifficulty(difficulty: Difficulty) {
-    this.difficulty = difficulty;
+    this._difficulty = difficulty;
   }
 
   newSolution(difficulty: Difficulty) {
     let shuffleAttempts = 0;
     let solution = getNewWordGrid(difficulty);
     while (highlightMatches(solution).match) {
-      debugger;
-      console.log('Shuffling...');
       // Some grids are not shuffle-able, so we need to get a new
       // grid after too many attempts
       if (shuffleAttempts > 20) {
@@ -64,8 +61,8 @@ function shuffleGrid(grid: WordGrid, mode: Difficulty) {
   const shuffled = cloneDeep(grid);
   let randomNum1: number;
   let randomNum2: number;
-  let char1: string;
-  let char2: string;
+  let char1: Nullable<string>;
+  let char2: Nullable<string>;
 
   for (let i = 0; i < shuffled.length; i++) {
     for (let j = 0; j < shuffled[i].length; j++) {
@@ -162,6 +159,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
 
   while (stage !== 0) {
     switch (stage) {
+      // @ts-ignore
       case 1:
         /**
          * Stage One
@@ -175,6 +173,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
         for (let j = 0; j < 4; j++) {
           wordGrid[0][j].val = word.charAt(j);
         }
+      // @ts-ignore
       case 2:
         /**
          * Stage Two
@@ -200,6 +199,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
         for (let i = 0; i < 4; i++) {
           wordGrid[i][0].val = word1.charAt(i);
         }
+      // @ts-ignore
       case 3:
         /**
          * Stage Three
@@ -223,7 +223,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
         for (let i = 0; i < 4; i++) {
           wordGrid[i][1].val = word2.charAt(i);
         }
-
+      // @ts-ignore
       case 4:
         /**
          * Stage Four
@@ -254,7 +254,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
         for (let i = 0; i < 4; i++) {
           wordGrid[1][i].val = word3.charAt(i);
         }
-
+      // @ts-ignore
       case 5:
         /**
          * Stage Five
@@ -277,7 +277,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
         for (let i = 0; i < 4; i++) {
           wordGrid[i][2].val = word4.charAt(i);
         }
-
+      // @ts-ignore
       case 6:
         /**
          * Stage Six
@@ -302,7 +302,7 @@ function getNewWordGrid(difficulty: Difficulty): WordGrid {
         for (let i = 0; i < 4; i++) {
           wordGrid[2][i].val = word5.charAt(i);
         }
-
+      // @ts-ignore
       case 7:
         /**
          * Stage Seven
@@ -373,7 +373,12 @@ export function highlightMatches(grid: WordGrid) {
   const newGrid = cloneDeep(grid);
 
   // Reset matches
-  newGrid.forEach((rows) => rows.forEach((cell) => (cell.match = false)));
+  newGrid.forEach((rows) =>
+    rows.forEach((cell) => {
+      cell.match.col = false;
+      cell.match.row = false;
+    }),
+  );
 
   // TODO: Generate the row/column coordinate lists
   const rows = [
@@ -482,7 +487,10 @@ export function didWin(grid: WordGrid) {
   return grid.reduce(
     (acc, rows) =>
       acc &&
-      rows.reduce((acc, cell) => acc && cell.match.row && cell.match.col, true),
+      rows.reduce(
+        (acc, cell) => Boolean(acc && cell.match.row && cell.match.col),
+        true,
+      ),
     true,
   );
 }

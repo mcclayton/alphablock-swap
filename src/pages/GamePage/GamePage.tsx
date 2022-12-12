@@ -25,12 +25,7 @@ export function GamePage() {
       <div className={boardContainer}>
         <h1 className={header}>BlockWords</h1>
         <div className={flexCenter.row}>
-          <div
-            className={flexCenter.column}
-            style={{
-              flexDirection: 'column',
-            }}
-          >
+          <div className={flexCenter.column}>
             <Grid initBoard={solution} />
             <button
               className={cx(button.base)}
@@ -39,7 +34,7 @@ export function GamePage() {
             >
               New
             </button>
-            <div style={{ display: 'flex' }}>
+            <div className={flexCenter.row}>
               <button
                 className={cx(button.base, {
                   [button.selected]: sb.difficulty === Difficulty.Easy,
