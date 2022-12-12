@@ -29,7 +29,21 @@ export const boardContainer = style({
 
 export const header = style({
   color: '#c9d4c0',
-  fontSize: '40px',
   margin: 0,
   fontWeight: 400,
+  fontFamily: 'Pacifico !important',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      fontSize: '25px',
+    },
+    'screen and (min-width: 600px)': {
+      fontSize: '30px',
+    },
+    'screen and (min-width: 768px)': {
+      fontSize: '35px',
+    },
+    'screen and (min-width: 1200px)': {
+      fontSize: '40px',
+    },
+  },
 });
