@@ -14,7 +14,7 @@ export const flexCenter = styleVariants({
 
 export const button = styleVariants({
   base: {
-    padding: '10px',
+    padding: '8px 12px',
     background: PAGE_BG,
     color: GRID_CONTAINER_BORDER,
     fontWeight: 'bold',
