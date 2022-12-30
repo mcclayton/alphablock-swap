@@ -4,6 +4,7 @@ import {
   BLOCK_BG_SELECTED,
   BLOCK_FG,
   BLOCK_FG_SELECTED,
+  GRID_CONTAINER_BORDER,
   SPACING,
 } from 'theme.css';
 
@@ -72,7 +73,7 @@ export const block = styleVariants({
     baseBlock,
     {
       background: 'none',
-      color: '#5c5b5b',
+      color: GRID_CONTAINER_BORDER,
       border: 'none',
       cursor: 'default',
     },
