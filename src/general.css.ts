@@ -1,5 +1,5 @@
 import { style, styleVariants } from '@vanilla-extract/css';
-import { GRID_CONTAINER_BORDER, PAGE_BG, SPACING } from 'theme.css';
+import { GRID_CONTAINER_BORDER, PAGE_BG } from 'theme.css';
 
 export const baseFlexCenter = style({
   display: 'flex',
@@ -18,7 +18,7 @@ export const button = styleVariants({
     background: PAGE_BG,
     color: GRID_CONTAINER_BORDER,
     fontWeight: 'bold',
-    margin: SPACING,
+    margin: '6px',
     borderRadius: '8px',
     border: `2px solid ${GRID_CONTAINER_BORDER}`,
     borderBottom: `4px solid ${GRID_CONTAINER_BORDER}`,
