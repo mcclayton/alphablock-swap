@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-tiny-popover": "^7.2.0",
     "rollup-plugin-visualizer": "^5.7.1",
     "typescript": "^4.8.3",
     "url": "^0.11.0",

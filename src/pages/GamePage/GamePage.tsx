@@ -9,7 +9,7 @@ import {
   header,
   page,
 } from './GamePage.css';
-import { Grid } from './components/Grid/Grid';
+import { GameBoard } from './components/GameBoard';
 
 const sb = new SolutionBuilder();
 
@@ -26,7 +26,7 @@ export function GamePage() {
         <h1 className={header}>BlockWords</h1>
         <div className={flexCenter.row}>
           <div className={flexCenter.column}>
-            <Grid initBoard={solution} />
+            <GameBoard initBoard={solution} />
             <button
               className={cx(button.base)}
               type="button"

@@ -12,7 +12,3 @@ export const grid = style({
 export const gridWrapper = style({
   padding: SPACING,
 });
-
-export const row = style({
-  display: 'flex',
-});

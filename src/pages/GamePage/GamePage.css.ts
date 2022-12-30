@@ -1,5 +1,5 @@
 import { style, styleVariants } from '@vanilla-extract/css';
-import { PAGE_BG } from 'theme.css';
+import { BLOCK_FG, PAGE_BG } from 'theme.css';
 
 export const page = style({
   width: '100%',
@@ -28,7 +28,7 @@ export const boardContainer = style({
 });
 
 export const header = style({
-  color: '#c9d4c0',
+  color: BLOCK_FG,
   margin: 0,
   fontWeight: 400,
   fontFamily: 'Pacifico !important',
